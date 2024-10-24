@@ -15,7 +15,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> findAll() {
+    public List<Product> findAllProduct() {
         return productRepository.findAll();
     }
 
@@ -41,5 +41,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsProduct(String name) {
+        return productRepository.findProductByName(name).isPresent();
     }
 }

@@ -1,6 +1,6 @@
 package cl.company.apiproductservice.controller;
 
-import cl.company.apiproductservice.exception.ErrorResponse;
+import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
 import cl.company.apiproductservice.service.ProductService;
 import jakarta.validation.Valid;
@@ -36,7 +36,7 @@ public class ProductController {
 
         if (StringUtils.containsWhitespace(String.valueOf(id)) || id == null) {
             log.info("El id no se ingreso");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Algunos de los parámetros no se ingresaron"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron"));
         }
         return ResponseEntity.ok(productService.findProduct(id));
     }
@@ -47,7 +47,7 @@ public class ProductController {
 
         if (product == null) {
             log.info("Algunos de los parámetros no se ingresaron");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Algunos de los parámetros no se ingresaron"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron"));
         }
 
         if (bindingResult.hasErrors()) {
@@ -63,7 +63,7 @@ public class ProductController {
 
         if (product == null) {
             log.info("Algunos de los parámetros no se ingresaron");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Algunos de los parámetros no se ingresaron"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron"));
         }
 
         if (bindingResult.hasErrors()) {
@@ -78,7 +78,7 @@ public class ProductController {
 
         if (StringUtils.containsWhitespace(String.valueOf(id))|| id == null) {
             log.info("El id no se ingreso");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Algunos de los parámetros no se ingresaron"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron"));
         }
 
 
@@ -86,10 +86,10 @@ public class ProductController {
 
         if (product != null) {
             productService.deleteProduct(id);
-            return ResponseEntity.ok(new ErrorResponse("Libro eliminado"));
+            return ResponseEntity.ok(new ApiResponse("Libro eliminado"));
         } else {
             log.info("Libro no encontrado con id: " + id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Libro no encontrado"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Libro no encontrado"));
         }
     }
 

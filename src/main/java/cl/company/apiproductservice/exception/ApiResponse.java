@@ -1,10 +1,10 @@
 package cl.company.apiproductservice.exception;
 
-public class ErrorResponse {
+public class ApiResponse {
 
     private final String message;
 
-    public ErrorResponse(String message) {
+    public ApiResponse(String message) {
         this.message = message;
     }
 

@@ -6,9 +6,10 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> findAll();
+    List<Product> findAllProduct();
     Product findProduct(Long id);
     Product createProduct(Product product);
     Product updateProduct(Product product);
     void deleteProduct(Long id);
+    boolean existsProduct(String username);
 }
