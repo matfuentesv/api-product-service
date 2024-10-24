@@ -28,7 +28,7 @@ public class ProductController {
     @GetMapping(value = "/findAllProduct", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> findAllProduct() {
         log.info("Se solicita la lista de todas los usuarios");
-        return ResponseEntity.ok(productService.findAll());
+        return ResponseEntity.ok(productService.findAllProduct());
     }
 
     @GetMapping("/findProduct/{id}")
