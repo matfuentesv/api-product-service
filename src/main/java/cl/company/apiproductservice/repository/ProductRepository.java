@@ -9,6 +9,10 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
+
+    @Query("SELECT u FROM Product u WHERE u.id = :id")
+    Optional<Product> findProductById(@Param("name") Long id);
+
     @Query("SELECT u FROM Product u WHERE u.name = :name")
     Optional<Product> findProductByName(@Param("name") String name);
 }

@@ -11,5 +11,6 @@ public interface ProductService {
     Product createProduct(Product product);
     Product updateProduct(Product product);
     void deleteProduct(Long id);
-    boolean existsProduct(String username);
+    boolean existsProductByName(String username);
+    boolean existsProductById(Long id);
 }

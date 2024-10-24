@@ -46,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
     public ResponseEntity<Object> createProduct(String username, String password, Product product) {
         final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
         if(userValid){
-            if(!productService.existsProduct(product.getName())){
+            if(!productService.existsProductByName(product.getName())){
                 final Product createdProduct = productService.createProduct(product);
                 if(createdProduct == null){
                     log.info("Algunos de los parámetros no se ingresaron");
@@ -68,7 +68,7 @@ public class LoginServiceImpl implements LoginService {
     public ResponseEntity<Object> updateProduct(String username, String password, Product product) {
         final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
         if(userValid){
-            if(productService.existsProduct(product.getName())){
+            if(productService.existsProductByName(product.getName())){
                 return ResponseEntity.ok(productService.updateProduct(product));
             }   else {
                 log.info("No se puedo actualizar el product,no existe");
@@ -81,6 +81,19 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseEntity<Object> deleteProduct(String username, String password, Long id) {
-        return null;
+        // Verificar la autenticación del usuario
+        boolean userValid = userRepository.findByUserPassword(username, password).isPresent();
+        if (!userValid) {
+            return new ResponseEntity<>("No esta Autorizado para ejecutar este endpoint", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Verificar si el customer existe
+        if (!productService.existsProductById(id)) {
+            log.info("No se puede eliminar el product, no existe");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("El product no existe"));
+        }
+
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Eliminación exitosa");
     }
 }
