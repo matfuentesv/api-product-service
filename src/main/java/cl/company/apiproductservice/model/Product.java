@@ -25,12 +25,10 @@ public class Product {
     private String description;
 
     @Column(name = "price")
-    @NotBlank(message = "No puede ingresar un price vacio")
     @NotNull(message = "No puede ingresar un price nulo")
-    private Double price;
+    private int price;
 
     @Column(name = "stock")
-    @NotBlank(message = "No puede ingresar un stock vacio")
     @NotNull(message = "No puede ingresar un stock nulo")
     private int stock;
 

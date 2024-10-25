@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<Object> updateProduct(String username, String password, Product product) {
         final boolean userValid = isValidUser(username,password);
         if(userValid){
-            if(productService.existsProductByName(product.getName())){
+            if(productService.existsProductById((long) product.getId())){
                 return ResponseEntity.ok(productService.updateProduct(product));
             }   else {
                 log.info("No se puedo actualizar el product,no existe");
