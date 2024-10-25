@@ -3,7 +3,6 @@ package cl.company.apiproductservice.controller;
 import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
 import cl.company.apiproductservice.service.LoginService;
-import cl.company.apiproductservice.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,9 +95,9 @@ public class ProductController {
 
         if (product != null) {
             loginService.deleteProduct(username,password,id);
-            return ResponseEntity.ok(new ApiResponse("Libro eliminado",true));
+            return ResponseEntity.ok(new ApiResponse("Producto eliminado",true));
         } else {
-            log.info("Libro no encontrado con id: " + id);
+            log.info("Producto no encontrado con id: " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Libro no encontrado",false));
         }
     }

@@ -2,7 +2,6 @@ package cl.company.apiproductservice.client;
 
 
 import cl.company.apiproductservice.exception.ApiResponse;
-import cl.company.apiproductservice.model.Users;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

@@ -3,8 +3,6 @@ package cl.company.apiproductservice.service.impl;
 import cl.company.apiproductservice.client.UserClient;
 import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
-import cl.company.apiproductservice.model.Users;
-import cl.company.apiproductservice.repository.UserRepository;
 import cl.company.apiproductservice.service.LoginService;
 import cl.company.apiproductservice.service.ProductService;
 import lombok.extern.java.Log;
@@ -12,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
