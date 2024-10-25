@@ -3,7 +3,7 @@ package cl.company.apiproductservice.service.impl;
 import cl.company.apiproductservice.client.UserClient;
 import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
-import cl.company.apiproductservice.service.LoginService;
+import cl.company.apiproductservice.service.AuthService;
 import cl.company.apiproductservice.service.ProductService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log
-public class LoginServiceImpl implements LoginService {
+public class AuthServiceImpl implements AuthService {
 
     private final ProductService productService;
     private final UserClient userClient;
 
     @Autowired
-    public LoginServiceImpl(ProductService productService, UserClient userClient) {
+    public AuthServiceImpl(ProductService productService, UserClient userClient) {
         this.productService = productService;
         this.userClient = userClient;
     }

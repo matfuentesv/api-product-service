@@ -3,7 +3,7 @@ package cl.company.apiproductservice.service;
 import cl.company.apiproductservice.model.Product;
 import org.springframework.http.ResponseEntity;
 
-public interface LoginService {
+public interface AuthService {
 
     ResponseEntity<Object> findProduct(String username, String password, Long id);
     ResponseEntity<Object>findAllProduct(String username,String password);

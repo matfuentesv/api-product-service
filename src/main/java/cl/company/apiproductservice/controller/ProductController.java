@@ -2,7 +2,7 @@ package cl.company.apiproductservice.controller;
 
 import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
-import cl.company.apiproductservice.service.LoginService;
+import cl.company.apiproductservice.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +14,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 @Log
 public class ProductController {
 
     @Autowired
-    LoginService loginService;
+    AuthService authService;
 
 
     @GetMapping(value = "/findAllProduct", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findAllProduct(@RequestHeader("username")String username,
                                                  @RequestHeader("password")String password){
         log.info("Se solicita la lista de todas los usuarios");
-        return ResponseEntity.ok(loginService.findAllProduct(username,password));
+        return ResponseEntity.ok(authService.findAllProduct(username,password));
     }
 
     @GetMapping("/findProduct/{id}")
@@ -41,7 +39,7 @@ public class ProductController {
             log.info("El id no se ingreso");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron",false));
         }
-        return ResponseEntity.ok(loginService.findProduct(username,password,id));
+        return ResponseEntity.ok(authService.findProduct(username,password,id));
     }
 
     @PostMapping("/createProduct")
@@ -59,7 +57,7 @@ public class ProductController {
             throw new IllegalArgumentException("Error en los argumentos del método.");
         }
 
-        return ResponseEntity.ok(loginService.createProduct(username,password,product));
+        return ResponseEntity.ok(authService.createProduct(username,password,product));
     }
 
     @PutMapping("/updateProduct")
@@ -77,7 +75,7 @@ public class ProductController {
             throw new IllegalArgumentException("Error en los argumentos del método.");
         }
 
-        return ResponseEntity.ok(loginService.updateProduct(username,password,product));
+        return ResponseEntity.ok(authService.updateProduct(username,password,product));
     }
 
     @DeleteMapping("/deleteProduct/{id}")
@@ -91,10 +89,10 @@ public class ProductController {
         }
 
 
-        Object product = loginService.findProduct(username,password, id);
+        Object product = authService.findProduct(username,password, id);
 
         if (product != null) {
-            loginService.deleteProduct(username,password,id);
+            authService.deleteProduct(username,password,id);
             return ResponseEntity.ok(new ApiResponse("Producto eliminado",true));
         } else {
             log.info("Producto no encontrado con id: " + id);
