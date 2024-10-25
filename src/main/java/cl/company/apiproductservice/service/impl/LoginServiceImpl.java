@@ -1,7 +1,9 @@
 package cl.company.apiproductservice.service.impl;
 
+import cl.company.apiproductservice.client.UserClient;
 import cl.company.apiproductservice.exception.ApiResponse;
 import cl.company.apiproductservice.model.Product;
+import cl.company.apiproductservice.model.Users;
 import cl.company.apiproductservice.repository.UserRepository;
 import cl.company.apiproductservice.service.LoginService;
 import cl.company.apiproductservice.service.ProductService;
@@ -11,20 +13,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @Log
 public class LoginServiceImpl implements LoginService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final ProductService productService;
+    private final UserClient userClient;
 
     @Autowired
-    private ProductService productService;
+    public LoginServiceImpl(ProductService productService, UserClient userClient) {
+        this.productService = productService;
+        this.userClient = userClient;
+    }
 
     @Override
     public ResponseEntity<Object> findProduct(String username, String password, Long id) {
-        final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
+        final boolean userValid = isValidUser(username,password);
         if(userValid){
             return ResponseEntity.ok(productService.findProduct(id));
         }else {
@@ -34,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseEntity<Object> findAllProduct(String username, String password) {
-        final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
+        final boolean userValid = isValidUser(username,password);
         if(userValid){
             return ResponseEntity.ok(productService.findAllProduct());
         }else {
@@ -44,19 +51,19 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseEntity<Object> createProduct(String username, String password, Product product) {
-        final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
+        final boolean userValid = isValidUser(username,password);
         if(userValid){
             if(!productService.existsProductByName(product.getName())){
                 final Product createdProduct = productService.createProduct(product);
                 if(createdProduct == null){
                     log.info("Algunos de los parámetros no se ingresaron");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron"));
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Algunos de los parámetros no se ingresaron",false));
                 }else {
                     return ResponseEntity.ok(product);
                 }
             }   else {
                 log.info("No se puedo crear el cliente,ya existe");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("No se puedo crear el cliente,ya existe"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("No se puedo crear el cliente,ya existe",false));
             }
 
         }else {
@@ -66,13 +73,13 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseEntity<Object> updateProduct(String username, String password, Product product) {
-        final boolean userValid = userRepository.findByUserPassword(username,password).isPresent();
+        final boolean userValid = isValidUser(username,password);
         if(userValid){
             if(productService.existsProductByName(product.getName())){
                 return ResponseEntity.ok(productService.updateProduct(product));
             }   else {
                 log.info("No se puedo actualizar el product,no existe");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("No se puedo actualizar el product,no existe"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("No se puedo actualizar el product,no existe",false));
             }
         }else {
             return new ResponseEntity<>("No esta Autorizado para ejecutar este endpoint", HttpStatus.UNAUTHORIZED);
@@ -82,7 +89,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ResponseEntity<Object> deleteProduct(String username, String password, Long id) {
         // Verificar la autenticación del usuario
-        boolean userValid = userRepository.findByUserPassword(username, password).isPresent();
+        boolean userValid = isValidUser(username,password);
         if (!userValid) {
             return new ResponseEntity<>("No esta Autorizado para ejecutar este endpoint", HttpStatus.UNAUTHORIZED);
         }
@@ -90,10 +97,15 @@ public class LoginServiceImpl implements LoginService {
         // Verificar si el customer existe
         if (!productService.existsProductById(id)) {
             log.info("No se puede eliminar el product, no existe");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("El product no existe"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("El product no existe",false));
         }
 
         productService.deleteProduct(id);
         return ResponseEntity.ok("Eliminación exitosa");
+    }
+
+
+    private boolean isValidUser(String username,String password){
+        return userClient.login(username,password).isSuccess();
     }
 }
